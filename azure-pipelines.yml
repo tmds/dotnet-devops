@@ -8,18 +8,27 @@ trigger:
 
 variables:
 - name: ImageRepository
-  value: tmds/web
+  value: quay.io/tmds/web
 - name: BuildContextWeb
   value: web
 - name: DockerfileWeb
   value: web/Dockerfile
+- name: ContainerRegistry
+  value: DefaultDockerRegistryService
 
 steps:
 - task: Docker@2
-  displayName: Build
+  displayName: Build Image
   inputs:
     command: build
     buildContext: $(BuildContextWeb)
     Dockerfile: $(Build.SourcesDirectory)/$(DockerfileWeb)
+    repository: $(ImageRepository)
+    tags: latest
+- task: Docker@2
+  displayName: Push Image
+  inputs:
+    command: push
+    containerRegistry: $(ContainerRegistry)
     repository: $(ImageRepository)
     tags: latest
