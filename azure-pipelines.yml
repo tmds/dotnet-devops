@@ -7,11 +7,11 @@ trigger:
 - main
 
 variables:
-- name: IMAGEREPOSITORY
+- name: ImageRepository
   value: tmds/web
-- name: BUILDCONTEXT_WEB
+- name: BuildContextWeb
   value: web
-- name: DOCKERFILE_WEB
+- name: DockerfileWeb
   value: web/Dockerfile
 
 steps:
@@ -19,7 +19,7 @@ steps:
   displayName: Build
   inputs:
     command: build
-    buildContext: ${{ variables.BUILDCONTEXT_WEB }}
-    Dockerfile: ${{ variables.DOCKERFILE_WEB }}
-    repository: ${{ variables.IMAGEREPOSITORY }}
+    buildContext: $(BuildContextWeb)
+    Dockerfile: $(Build.SourcesDirectory)/$(DockerfileWeb)
+    repository: $(ImageRepository)
     tags: latest
