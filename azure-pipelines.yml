@@ -27,6 +27,11 @@ steps:
     repository: '$(ImageRepository)'
     tags: latest
 - task: Docker@2
+  displayName: Login
+  inputs:
+    command: login
+    containerRegistry: '$(ContainerRegistry)'
+- task: Docker@2
   displayName: Push Image
   inputs:
     command: push
