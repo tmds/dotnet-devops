@@ -8,28 +8,28 @@ trigger:
 
 variables:
 - name: ImageRepository
-  value: tmds/web
+  value: 'tmds/web'
 - name: BuildContextWeb
-  value: web
+  value: 'web'
 - name: DockerfileWeb
-  value: web/Dockerfile
+  value: 'web/Dockerfile'
 - name: ContainerRegistry
-  value: DefaultDockerRegistryService
+  value: 'DefaultDockerRegistryService'
 
 steps:
 - task: Docker@2
   displayName: Build Image
   inputs:
     command: build
-    containerRegistry: $(ContainerRegistry)
-    buildContext: $(BuildContextWeb)
-    Dockerfile: $(Build.SourcesDirectory)/$(DockerfileWeb)
-    repository: $(ImageRepository)
+    containerRegistry: '$(ContainerRegistry)'
+    buildContext: '$(BuildContextWeb)'
+    Dockerfile: '$(Build.SourcesDirectory)/$(DockerfileWeb)'
+    repository: '$(ImageRepository)'
     tags: latest
 - task: Docker@2
   displayName: Push Image
   inputs:
     command: push
-    containerRegistry: $(ContainerRegistry)
-    repository: $(ImageRepository)
+    containerRegistry: '$(ContainerRegistry)'
+    repository: '$(ImageRepository)'
     tags: latest
