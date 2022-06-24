@@ -8,7 +8,7 @@ trigger:
 
 variables:
 - name: ImageRepository
-  value: quay.io/tmds/web
+  value: tmds/web
 - name: BuildContextWeb
   value: web
 - name: DockerfileWeb
@@ -21,6 +21,7 @@ steps:
   displayName: Build Image
   inputs:
     command: build
+    containerRegistry: $(ContainerRegistry)
     buildContext: $(BuildContextWeb)
     Dockerfile: $(Build.SourcesDirectory)/$(DockerfileWeb)
     repository: $(ImageRepository)
