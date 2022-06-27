@@ -57,6 +57,7 @@ jobs:
             command: upgrade
             chartType: FilePath
             chartPath: helm/dotnet-chart/Chart.yaml
+            namespace: 'tdeseyn-stage'
             overrideValues: |
               build.enabled='false'
               image.name='quay.io/tdeseyn/web'
