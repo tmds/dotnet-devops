@@ -48,8 +48,8 @@ jobs:
 - deployment: Deploy
   environment:
     name: '$(Environment)'
-    resourceName: '$(EnvironmentResource)'
-    resourceType: Kubernetes
+    # resourceName: '$(EnvironmentResource)'
+    # resourceType: Kubernetes
   strategy:
     runOnce:
       deploy:
