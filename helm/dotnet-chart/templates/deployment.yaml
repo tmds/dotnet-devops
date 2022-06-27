@@ -5,8 +5,16 @@ metadata:
 spec:
   replicas: {{ .Values.deploy.replicas }}
   template:
+    metadata:
+      labels:
+        {{- include "dotnet.labels" . | nindent 8 }}
     spec:
       containers:
         - name: web
           image: {{ include "dotnet.imageName" . }}
-
+          ports:
+{{- range .Values.deploy.ports }}
+            - name: {{ .name }}
+              containerPort: {{ .targetPort }}
+              protocol: {{ .protocol }}
+{{- end }}
