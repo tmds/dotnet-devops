@@ -59,6 +59,7 @@ jobs:
             chartType: FilePath
             chartPath: helm/dotnet-chart
             namespace: 'tdeseyn-stage'
+            arguments: --dry-run --debug
             overrideValues: |
               build.enabled=false
               image.name='quay.io/tdeseyn/web'
