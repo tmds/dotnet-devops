@@ -27,10 +27,6 @@ spec:
       labels:
         {{- include "dotnet.labels" . | nindent 8 }}
     spec:
-{{- if .Values.deploy.initContainers }}
-      initContainers:
-        {{- tpl (toYaml .Values.deploy.initContainers) . | nindent 8 }}
-{{- end }}
       containers:
         - name: web
           image: {{ include "dotnet.imageName" . }}
