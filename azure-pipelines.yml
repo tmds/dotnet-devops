@@ -57,7 +57,7 @@ jobs:
           inputs:
             command: upgrade
             chartType: FilePath
-            chartPath: helm/dotnet-chart/Chart.yaml
+            chartPath: helm/dotnet-chart
             namespace: 'tdeseyn-stage'
             overrideValues: |
               build.enabled='false'
