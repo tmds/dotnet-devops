@@ -67,3 +67,4 @@ jobs:
           displayName: Deploy K8s Manifests
           inputs:
             manifests: $(bake.manifestsBundle)
+            namespace: 'tdeseyn-stage'
