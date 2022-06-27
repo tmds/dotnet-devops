@@ -52,6 +52,12 @@ jobs:
       deploy:
         steps:
         - task: HelmDeploy@0
-          displayName: Helm init
+          displayName: Helm Upgrade
           inputs:
-            command: init
+            command: upgrade
+            chartType: FilePath
+            chartPath: helm/dotnet-chart/Chart.yaml
+            overrideValues: |
+              build.enabled='false'
+              image.name='quay.io/tdeseyn/web'
+              image.tag='latest'
