@@ -45,7 +45,7 @@ jobs:
 - deployment:
   environment:
     name: StagingEnvironment
-    resourceName: '$(Namespace)'
+    resourceName: 'tdeseyn-stage'
     resourceType: Kubernetes
   strategy:
     runOnce:
