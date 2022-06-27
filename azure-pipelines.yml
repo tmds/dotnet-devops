@@ -46,8 +46,8 @@ jobs:
       repository: '$(Image)'
       tags: $(ImageTag)
 - deployment: Deploy
-  environment:
-    name: '$(Environment)'
+  environment: $(Environment).$(EnvironmentResource)
+    # name: 
     # resourceName: '$(EnvironmentResource)'
     # resourceType: Kubernetes
   strategy:
