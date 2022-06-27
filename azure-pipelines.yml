@@ -52,15 +52,12 @@ jobs:
       deploy:
         steps:
         - checkout: self
-        - task: HelmDeploy@0
-          displayName: Helm Upgrade
+        - task: KubernetesManifest@0
           inputs:
-            command: install
-            chartType: FilePath
-            chartPath: helm/dotnet-chart
+            action: 'bake'
             namespace: 'tdeseyn-stage'
-            arguments: --dry-run --debug
-            overrideValues: |
+            helmChart: 'helm/dotnet-chart'
+            overrides: |
               build.enabled=false
               image.name='quay.io/tdeseyn/web'
               image.tag='latest'
