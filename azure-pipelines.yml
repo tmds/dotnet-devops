@@ -53,6 +53,8 @@ jobs:
         steps:
         - checkout: self
         - task: KubernetesManifest@0
+          name: bake
+          displayName: Render Helm Chart
           inputs:
             action: 'bake'
             namespace: 'tdeseyn-stage'
@@ -61,3 +63,7 @@ jobs:
               build.enabled:false
               image.name:quay.io/tdeseyn/web
               image.tag:'latest'
+        - task: KubernetesManifest@0
+          displayName: Deploy K8s Manifests
+          inputs:
+            manifests: $(bake.manifestsBundle)
