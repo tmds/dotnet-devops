@@ -17,6 +17,8 @@ variables:
   value: 'DefaultDockerRegistryService'
 
 steps:
+- script: |
+    env
 - task: Docker@2
   displayName: Build Image
   inputs:
