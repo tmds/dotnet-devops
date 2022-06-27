@@ -51,6 +51,7 @@ jobs:
     runOnce:
       deploy:
         steps:
+        - checkout: self
         - task: HelmDeploy@0
           displayName: Helm Upgrade
           inputs:
