@@ -55,10 +55,9 @@ jobs:
         - task: HelmDeploy@0
           displayName: Helm Upgrade
           inputs:
-            command: upgrade
+            command: install
             chartType: FilePath
             chartPath: helm/dotnet-chart
-            valueFile: helm/dotnet-chart/values.yaml
             namespace: 'tdeseyn-stage'
             arguments: --dry-run --debug
             overrideValues: |
