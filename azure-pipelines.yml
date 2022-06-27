@@ -65,7 +65,7 @@ jobs:
             overrides: |
               build.enabled:false
               image.name:quay.io/tdeseyn/web
-              image.tag:$(ImageTag)
+              image.tag:''$(ImageTag)''
         - task: KubernetesManifest@0
           displayName: Deploy K8s Manifests
           inputs:
