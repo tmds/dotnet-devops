@@ -16,27 +16,37 @@ variables:
 - name: ContainerRegistry
   value: 'DefaultDockerRegistryService'
 
-steps:
-- task: Docker@2
-  displayName: Build Image
-  inputs:
-    command: build
-    containerRegistry: '$(ContainerRegistry)'
-    buildContext: '$(BuildContextWeb)'
-    Dockerfile: '$(Build.SourcesDirectory)/$(DockerfileWeb)'
-    repository: '$(ImageRepository)'
-    tags: latest
-- task: Docker@2
-  displayName: Login
-  inputs:
-    command: login
-    containerRegistry: '$(ContainerRegistry)'
-- task: Docker@2
-  displayName: Push Image
-  inputs:
-    command: push
-    containerRegistry: '$(ContainerRegistry)'
-    repository: '$(ImageRepository)'
-    tags: latest
-- task: HelmDeploy@0
-  displayName: Helm init
+jobs:
+- job: Build
+  steps:
+  - task: Docker@2
+    displayName: Build Image
+    inputs:
+      command: build
+      containerRegistry: '$(ContainerRegistry)'
+      buildContext: '$(BuildContextWeb)'
+      Dockerfile: '$(Build.SourcesDirectory)/$(DockerfileWeb)'
+      repository: '$(ImageRepository)'
+      tags: latest
+  - task: Docker@2
+    displayName: Login
+    inputs:
+      command: login
+      containerRegistry: '$(ContainerRegistry)'
+  - task: Docker@2
+    displayName: Push Image
+    inputs:
+      command: push
+      containerRegistry: '$(ContainerRegistry)'
+      repository: '$(ImageRepository)'
+      tags: latest
+- deployment:
+  environment: 'StagingEnvironment'
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - task: HelmDeploy@0
+          displayName: Helm init
+          inputs:
+            command: init
