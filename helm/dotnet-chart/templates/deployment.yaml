@@ -12,9 +12,4 @@ spec:
       containers:
         - name: web
           image: {{ include "dotnet.imageName" . }}
-          ports:
-{{- range .Values.deploy.ports }}
-            - name: {{ .name }}
-              containerPort: {{ .targetPort }}
-              protocol: {{ .protocol }}
-{{- end }}
+
