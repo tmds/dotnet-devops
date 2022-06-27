@@ -28,7 +28,7 @@ jobs:
     displayName: Build Image
     inputs:
       command: build
-      RegistryService: '$(RegistryService)'
+      RegistryService: $(RegistryService)
       buildContext: '$(BuildContext)'
       Dockerfile: '$(Build.SourcesDirectory)/$(Dockerfile)'
       repository: '$(Image)'
@@ -37,12 +37,12 @@ jobs:
     displayName: Login
     inputs:
       command: login
-      RegistryService: '$(RegistryService)'
+      RegistryService: $(RegistryService)
   - task: Docker@2
     displayName: Push Image
     inputs:
       command: push
-      RegistryService: '$(RegistryService)'
+      RegistryService: $(RegistryService)
       repository: '$(Image)'
       tags: $(ImageTag)
 - deployment: Deploy
