@@ -1,22 +1,25 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
 - main
 
 variables:
-- name: ImageRepository
-  value: 'tdeseyn/web'
-- name: BuildContextWeb
+- name: BuildContext        # Source directory that contains 'Web' application
   value: 'web'
-- name: DockerfileWeb
+- name: Dockerfile          # Source location of Dockerfile that builds 'Web' application 
   value: 'web/Dockerfile'
-- name: ContainerRegistry
+- name: RegistryService     # Azure DevOps Docker service connection name
   value: 'DefaultDockerRegistryService'
-- name: Namespace
+- name: Environment         # Azure DevOps target environment
+  value: 'StagingEnvironment'
+- name: EnvironmentResource # Azure DevOps target resource
   value: 'tdeseyn-stage'
+- name: Image               # Name of the image
+  value: 'tdeseyn/web'
+- name: ImageTag            # Image tag
+  value: '$(Build.BuildId)'
+- name: Namespace           # Kubernetes namespace
+  value: 'tdeseyn-stage'
+- name: ImagePullSecret     # Kubernetes secret for pulling from RegistryService
+  value: 'pullsecret'
 
 jobs:
 - job: Build
@@ -25,27 +28,27 @@ jobs:
     displayName: Build Image
     inputs:
       command: build
-      containerRegistry: '$(ContainerRegistry)'
-      buildContext: '$(BuildContextWeb)'
-      Dockerfile: '$(Build.SourcesDirectory)/$(DockerfileWeb)'
-      repository: '$(ImageRepository)'
-      tags: latest
+      RegistryService: '$(RegistryService)'
+      buildContext: '$(BuildContext)'
+      Dockerfile: '$(Build.SourcesDirectory)/$(Dockerfile)'
+      repository: '$(Image)'
+      tags: $(ImageTag)
   - task: Docker@2
     displayName: Login
     inputs:
       command: login
-      containerRegistry: '$(ContainerRegistry)'
+      RegistryService: '$(RegistryService)'
   - task: Docker@2
     displayName: Push Image
     inputs:
       command: push
-      containerRegistry: '$(ContainerRegistry)'
-      repository: '$(ImageRepository)'
-      tags: latest
-- deployment:
+      RegistryService: '$(RegistryService)'
+      repository: '$(Image)'
+      tags: $(ImageTag)
+- deployment: Deploy
   environment:
-    name: StagingEnvironment
-    resourceName: 'tdeseyn-stage'
+    name: '$(Environment)'
+    resourceName: '$(EnvironmentResource)'
     resourceType: Kubernetes
   strategy:
     runOnce:
@@ -57,15 +60,15 @@ jobs:
           displayName: Render Helm Chart
           inputs:
             action: 'bake'
-            namespace: 'tdeseyn-stage'
+            namespace: $(Namespace)
             helmChart: 'helm/dotnet-chart'
             overrides: |
               build.enabled:false
               image.name:quay.io/tdeseyn/web
-              image.tag:latest
+              image.tag:$(ImageTag)
         - task: KubernetesManifest@0
           displayName: Deploy K8s Manifests
           inputs:
             manifests: $(bake.manifestsBundle)
-            namespace: 'tdeseyn-stage'
-            imagePullSecrets: pullsecret
+            namespace: $(Namespace)
+            imagePullSecrets: $(ImagePullSecret)
