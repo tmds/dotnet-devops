@@ -60,6 +60,6 @@ jobs:
             chartPath: helm/dotnet-chart
             namespace: 'tdeseyn-stage'
             overrideValues: |
-              build.enabled='false'
+              build.enabled=false
               image.name='quay.io/tdeseyn/web'
               image.tag='latest'
