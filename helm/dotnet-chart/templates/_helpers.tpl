@@ -3,12 +3,12 @@
 {{- end -}}
 
 {{- define "dotnet.labels" -}}
-helm.sh/chart: {{ .Chart.Name }}
-{{ include "dotnet.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
+# helm.sh/chart: {{ .Chart.Name }}
+# {{ include "dotnet.selectorLabels" . }}
+# {{- if .Chart.AppVersion }}
+# app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+# {{- end }}
+# app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.openshift.io/runtime: dotnet
 {{- end }}
 
