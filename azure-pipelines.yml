@@ -53,13 +53,6 @@ jobs:
         steps:
         - checkout: self
         - task: KubernetesManifest@0
-          displayName: Create pull secret
-          inputs: 
-            action: createSecret
-            secretType: dockerRegistry
-            secretName: foobar
-            dockerRegistryEndpoint: DefaultDockerRegistryService
-        - task: KubernetesManifest@0
           name: bake
           displayName: Render Helm Chart
           inputs:
@@ -70,7 +63,7 @@ jobs:
               build.enabled:false
               image.name:quay.io/tdeseyn/web
               image.tag:latest
-              pullsecret:foobar
+              pullsecret:pullsecret
         - task: KubernetesManifest@0
           displayName: Deploy K8s Manifests
           inputs:
