@@ -15,7 +15,7 @@ variables:
 - name: ImageName           # Name of the image
   value: 'tdeseyn/web'
 - name: ImageTag            # Image tag
-  value: $(Build.BuildId)
+  value: $(Build.SourceVersion)
 - name: Environment         # Azure DevOps target environment
   value: 'StagingEnvironment'
 - name: EnvironmentResource # Azure DevOps target resource
