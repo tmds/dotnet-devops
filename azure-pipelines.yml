@@ -23,7 +23,7 @@ variables:
 - name: Namespace           # Kubernetes target namespace
   value: 'tdeseyn-stage'
 - name: ImagePullSecret     # Kubernetes secret for pulling image
-  value: 'pullsecret'
+  value: 'quay'
 
 jobs:
 - job: Build
