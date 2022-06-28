@@ -48,10 +48,9 @@ jobs:
         steps:
         - checkout: self
         - task: KubernetesManifest@0
-          name: bake
-          displayName: Render Helm Chart
+          displayName: Bake Manifests
           inputs:
-            action: 'bake'
+            action: bake
             namespace: $(Namespace)
             helmChart: $(HelmChart)
             releaseName: $(ReleaseName)
@@ -63,6 +62,7 @@ jobs:
         - task: KubernetesManifest@0
           displayName: Deploy Manifests
           inputs:
+            action: deploy
             manifests: $(bake.manifestsBundle)
             namespace: $(Namespace)
             imagePullSecrets: $(ImagePullSecret)
