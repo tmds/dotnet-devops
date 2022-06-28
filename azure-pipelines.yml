@@ -35,9 +35,9 @@ jobs:
     inputs:
       command: buildAndPush
       containerRegistry: $(RegistryService)
-      buildContext: '$(BuildContext)'
-      Dockerfile: '$(Build.SourcesDirectory)/$(Dockerfile)'
-      repository: '$(ImageName)'
+      buildContext: $(BuildContext)
+      Dockerfile: $(Build.SourcesDirectory)/$(Dockerfile)
+      repository: $(ImageName)
       tags: $(ImageTag)
 - deployment: Deploy
   dependsOn: Build
@@ -48,6 +48,7 @@ jobs:
         steps:
         - checkout: self
         - task: KubernetesManifest@0
+          name: bake
           displayName: Bake Manifests
           inputs:
             action: bake
