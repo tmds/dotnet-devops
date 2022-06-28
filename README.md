@@ -127,4 +127,4 @@ DevOps will show you the `azure-pipelines.yml`. You need to update a few values.
 
 That's it.
 
-Now click the _Run_, and watch the pipeline in action.
+Now click _Run_, and watch the pipeline in action.
