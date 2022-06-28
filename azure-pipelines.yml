@@ -72,7 +72,8 @@ jobs:
             overrides: |
               build.enabled:false
               image.name:$(RegistryServer)/$(Image)
-              image.tag:$(ImageTag)
+            containers: |
+              $(RegistryServer)/$(Image):$(ImageTag)
         - task: KubernetesManifest@0
           displayName: Deploy Manifests
           inputs:
