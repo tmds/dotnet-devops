@@ -10,12 +10,12 @@ variables:
   value: 'helm/dotnet-chart'
 - name: RegistryService     # Image registry service connection name
   value: 'DefaultDockerRegistryService'
-- name: Image               # Name of the image
+- name: RegistryServer      # Hostname of the registry
+  value: 'quay.io'
+- name: ImageName           # Name of the image
   value: 'tdeseyn/web'
 - name: ImageTag            # Image tag
   value: $(Build.BuildId)
-- name: RegistryServer      # Hostname of the registry
-  value: 'quay.io'
 - name: Environment         # Azure DevOps target environment
   value: 'StagingEnvironment'
 - name: EnvironmentResource # Azure DevOps target resource
@@ -37,7 +37,7 @@ jobs:
       containerRegistry: $(RegistryService)
       buildContext: '$(BuildContext)'
       Dockerfile: '$(Build.SourcesDirectory)/$(Dockerfile)'
-      repository: '$(Image)'
+      repository: '$(ImageName)'
       tags: $(ImageTag)
   - task: Docker@2
     displayName: Login
@@ -49,7 +49,7 @@ jobs:
     inputs:
       command: push
       containerRegistry: $(RegistryService)
-      repository: '$(Image)'
+      repository: '$(ImageName)'
       tags: $(ImageTag)
 - deployment: Deploy
   environment: $(Environment).$(EnvironmentResource)
@@ -71,9 +71,9 @@ jobs:
             releaseName: $(ReleaseName)
             overrides: |
               build.enabled:false
-              image.name:$(RegistryServer)/$(Image)
+              image.name:$(RegistryServer)/$(ImageName)
             containers: |
-              $(RegistryServer)/$(Image):$(ImageTag)
+              $(RegistryServer)/$(ImageName):$(ImageTag)
         - task: KubernetesManifest@0
           displayName: Deploy Manifests
           inputs:
