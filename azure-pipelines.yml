@@ -31,24 +31,12 @@ jobs:
 - job: Build
   steps:
   - task: Docker@2
-    displayName: Build Image
+    displayName: Build and push Image
     inputs:
-      command: build
+      command: buildAndPush
       containerRegistry: $(RegistryService)
       buildContext: '$(BuildContext)'
       Dockerfile: '$(Build.SourcesDirectory)/$(Dockerfile)'
-      repository: '$(ImageName)'
-      tags: $(ImageTag)
-  # - task: Docker@2
-  #   displayName: Login
-  #   inputs:
-  #     command: login
-  #     containerRegistry: $(RegistryService)
-  - task: Docker@2
-    displayName: Push Image
-    inputs:
-      command: push
-      containerRegistry: $(RegistryService)
       repository: '$(ImageName)'
       tags: $(ImageTag)
 - deployment: Deploy
