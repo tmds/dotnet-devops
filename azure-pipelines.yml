@@ -2,26 +2,30 @@ trigger:
 - main
 
 variables:
-- name: BuildContext        # Source directory that contains 'Web' application
+- name: BuildContext        # Source directory for the image build
   value: 'web'
-- name: Dockerfile          # Source location of Dockerfile that builds 'Web' application 
+- name: Dockerfile          # Source location of Dockerfile
   value: 'web/Dockerfile'
-- name: RegistryService     # Azure DevOps Docker service connection name
+- name: HelmChart           # Source location of Helm chart
+  value: 'helm/dotnet-chart'
+- name: RegistryService     # Image registry service connection name
   value: 'DefaultDockerRegistryService'
+- name: Image               # Name of the image
+  value: 'tdeseyn/web'
+- name: ImageTag            # Image tag
+  value: 'latest'
+- name: RegistryServer      # Hostname of the registry
+  value: 'quay.io'
 - name: Environment         # Azure DevOps target environment
   value: 'StagingEnvironment'
 - name: EnvironmentResource # Azure DevOps target resource
   value: 'tdeseyn-stage'
-- name: Image               # Name of the image
-  value: 'tdeseyn/web'
-- name: ImageTag            # Image tag
-  value: '$(Build.BuildId)'
-- name: Namespace           # Kubernetes namespace
+- name: Namespace           # Target Kubernetes namespace
   value: 'tdeseyn-stage'
-- name: ImagePullSecret     # Kubernetes secret for pulling from RegistryService
-  value: 'pullsecret'
-- name: ReleaseName         # Kubernetes secret for pulling from RegistryService
+- name: ReleaseName         # Name of the Helm release
   value: 'web'
+- name: ImagePullSecret     # Kubernetes secret for pulling from image registry
+  value: 'pullsecret'
 
 jobs:
 - job: Build
@@ -63,14 +67,14 @@ jobs:
           inputs:
             action: 'bake'
             namespace: $(Namespace)
-            helmChart: 'helm/dotnet-chart'
+            helmChart: $(HelmChart)
             releaseName: $(ReleaseName)
             overrides: |
               build.enabled:false
-              image.name:quay.io/tdeseyn/web
+              image.name:$(RegistryServer)/$(Image)
               image.tag:$(ImageTag)
         - task: KubernetesManifest@0
-          displayName: Deploy K8s Manifests
+          displayName: Deploy Manifests
           inputs:
             manifests: $(bake.manifestsBundle)
             namespace: $(Namespace)
