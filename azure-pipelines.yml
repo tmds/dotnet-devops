@@ -13,7 +13,7 @@ variables:
 - name: Image               # Name of the image
   value: 'tdeseyn/web'
 - name: ImageTag            # Image tag
-  value: 'latest'
+  value: $(Build.BuildId)
 - name: RegistryServer      # Hostname of the registry
   value: 'quay.io'
 - name: Environment         # Azure DevOps target environment
