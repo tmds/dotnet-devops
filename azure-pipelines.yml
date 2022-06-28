@@ -39,11 +39,11 @@ jobs:
       Dockerfile: '$(Build.SourcesDirectory)/$(Dockerfile)'
       repository: '$(ImageName)'
       tags: $(ImageTag)
-  - task: Docker@2
-    displayName: Login
-    inputs:
-      command: login
-      containerRegistry: $(RegistryService)
+  # - task: Docker@2
+  #   displayName: Login
+  #   inputs:
+  #     command: login
+  #     containerRegistry: $(RegistryService)
   - task: Docker@2
     displayName: Push Image
     inputs:
@@ -53,9 +53,6 @@ jobs:
       tags: $(ImageTag)
 - deployment: Deploy
   environment: $(Environment).$(EnvironmentResource)
-    # name: 
-    # resourceName: '$(EnvironmentResource)'
-    # resourceType: Kubernetes
   strategy:
     runOnce:
       deploy:
