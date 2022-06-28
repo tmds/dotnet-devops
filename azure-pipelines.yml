@@ -8,6 +8,8 @@ variables:
   value: 'web/Dockerfile'
 - name: HelmChart           # Source location of Helm chart
   value: 'helm/dotnet-chart'
+- name: HelmReleaseName     # Helm release name
+  value: 'web'
 - name: RegistryService     # Image registry service connection name
   value: 'DefaultDockerRegistryService'
 - name: RegistryServer      # Hostname of the registry
@@ -16,22 +18,18 @@ variables:
   value: 'tdeseyn/web'
 - name: ImageTag            # Image tag
   value: $(Build.SourceVersion)
-- name: Environment         # Azure DevOps target environment
-  value: 'StagingEnvironment'
-- name: EnvironmentResource # Azure DevOps target resource
+- name: TargetEnvironment   # Azure DevOps target environment resource
+  value: 'StagingEnvironment.tdeseyn-stage'
+- name: Namespace           # Kubernetes target namespace
   value: 'tdeseyn-stage'
-- name: Namespace           # Target Kubernetes namespace
-  value: 'tdeseyn-stage'
-- name: ReleaseName         # Name of the Helm release
-  value: 'web'
-- name: ImagePullSecret     # Kubernetes secret for pulling from image registry
+- name: ImagePullSecret     # Kubernetes secret for pulling image
   value: 'pullsecret'
 
 jobs:
 - job: Build
   steps:
   - task: Docker@2
-    displayName: Build and push Image
+    displayName: Build and Push Image
     inputs:
       command: buildAndPush
       containerRegistry: $(RegistryService)
@@ -41,7 +39,7 @@ jobs:
       tags: $(ImageTag)
 - deployment: Deploy
   dependsOn: Build
-  environment: $(Environment).$(EnvironmentResource)
+  environment: $(TargetEnvironment)
   strategy:
     runOnce:
       deploy:
@@ -52,9 +50,8 @@ jobs:
           displayName: Bake Manifests
           inputs:
             action: bake
-            namespace: $(Namespace)
             helmChart: $(HelmChart)
-            releaseName: $(ReleaseName)
+            releaseName: $(HelmReleaseName)
             overrides: |
               build.enabled:false
               image.name:$(RegistryServer)/$(ImageName)
@@ -67,4 +64,3 @@ jobs:
             manifests: $(bake.manifestsBundle)
             namespace: $(Namespace)
             imagePullSecrets: $(ImagePullSecret)
-            releaseName: $(ReleaseName)
